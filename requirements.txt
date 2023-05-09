@@ -1,0 +1,6 @@
+torch
+torchaudio
+torchmetrics[audio]
+pesq
+lightning
+gradio
