@@ -1,0 +1,2 @@
+ckpt: ml/weights/demucs64.pt
+queue_size: 5
