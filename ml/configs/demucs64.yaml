@@ -1,0 +1,14 @@
+model: 
+  name: demucs64
+  sr: 16000
+train:
+  epochs: 150
+  batch: 32
+  patience: 10
+  delta: 1.e-4
+  seed: 42
+  workers: 20
+  ratio: [0.9, 0.1]
+optim:
+  lr: 3.e-4
+  wd: 0

@@ -1,0 +1,14 @@
+model: 
+  name: wavenet
+  sr: 16000
+train:
+  epochs: 80
+  batch: 64
+  patience: 10
+  delta: 1.e-4
+  seed: 42
+  workers: 10
+  ratio: [0.9, 0.1]
+optim:
+  lr: 4.e-4
+  wd: 0
