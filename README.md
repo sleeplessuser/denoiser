@@ -74,20 +74,20 @@
 </figure>
 
 ## Функция потерь
-$\texttt{spectral\_loss}(\hat{y}, y) = \frac{||STFT(\hat{y}) - STFT(y)||_{L_1}}{||STFT(y)||_{L_1}}$
+$SpectralLoss(\hat{y}, y) = \|\|\log{STFT(\hat{y})} - \log{STFT(y)}\|\|_L{_1}$
 
-$\texttt{spectral\_convergence\_loss}(\hat{y}, y) = ||\log{STFT(\hat{y})}, \log{STFT(y)}||_{L_1}$
+$SpectralConvergenceLoss(\hat{y}, y) = \frac{\|\|STFT(\hat{y}) - STFT(y)\|\|_L{_2}}{\|\|STFT(y)\|\|_L{_2}}$
 
-$\texttt{stft\_loss}(\hat{y}, y) = \frac{\texttt{spectral\_loss}(\hat{y}, y) + \texttt{spectral\_convergence\_loss}(\hat{y}, y)}{2}$
+$STFTLoss(\hat{y}, y) = \frac{SpectralLoss(\hat{y}, y) + SpectralConvergenceLoss(\hat{y}, y)}{2}$
 
-$\texttt{l1\_loss}(\hat{y}, y) = ||\hat{y} - y||_{L_1}$
+$L1Loss(\hat{y}, y) = \|\|\hat{y} - y\|\|_L{_1}$
 
-$loss(\hat{y}, y) = \frac{\texttt{l1\_loss}(\hat{y} - y) + \texttt{stft\_loss}(\hat{y}, y)}{2}$
+$loss(\hat{y}, y) = \frac{L1Loss(\hat{y}, y) + STFTLoss(\hat{y}, y)}{2}$
 , где STFT(Short-time Fourier transform) - преобразование фурье с примением механизма скользящего окна.
-Итоговая функция ошибки состоит из двух частей: $\texttt{l1\_loss}$ - основа функции потерь для общей сходимости, $\texttt{stft\_loss}(\hat{y}, y)$ - применяется для придания частичной инвариантности относительно сдвига выхода модели во времени и выделения дополнительной информации о разхождении величин для лучшей сходимости.
+Итоговая функция ошибки состоит из двух частей: $L1Loss$ - основа функции потерь для общей сходимости, $STFTLoss(\hat{y}, y)$ - применяется для придания частичной инвариантности относительно сдвига выхода модели во времени.
 
 ## Оптимизация
-В качестве оптимизатора был выбран Adam с параметрами $\beta_1=0.9, \beta_2=0.999, \texttt{weight\_decay}=0$ (данная конфигурация была выбрана на основании [статьи](https://arxiv.org/pdf/2006.12847.pdf), посвящённой фильтрации шума с помощью demucs). Значения для $\texttt{learning\_rate}$ указаны в [файлах конфигурации](ml/configs) соответствующих моделей и были подобраны с использованием метода [LR range test](https://arxiv.org/pdf/1506.01186.pdf).
+В качестве оптимизатора был выбран Adam с параметрами $\beta_1=0.9, \beta_2=0.999$, $weight$ $decay=0$ (данная конфигурация была выбрана на основании [статьи](https://arxiv.org/pdf/2006.12847.pdf), посвящённой фильтрации шума с помощью demucs). Значения для $learning$ $rate$ указаны в [файлах конфигурации](ml/configs) соответствующих моделей и были подобраны с использованием метода [LR range test](https://arxiv.org/pdf/1506.01186.pdf).
 Так же при обучении применялся [lr scheduler](https://pytorch.org/docs/stable/generated/torch.optim.lr_scheduler.ReduceLROnPlateau.html), уменьщающий значение $lr$, если целевая метрика не улучшается на протяжении нескольких эпох.
 
 ## Данные 
@@ -106,7 +106,7 @@ $loss(\hat{y}, y) = \frac{\texttt{l1\_loss}(\hat{y} - y) + \texttt{stft\_loss}(\
 </figure>
 
 ### Итоговые метрики качества  
-1) Signal-to-noise ratio (SNR) - отношение мощности сигнала к мощности шума, меняется в пределах $[0, \infin)$, большее значение считается лучшим.
+1) Signal-to-noise ratio (SNR) - отношение мощности сигнала к мощности шума, меняется в пределах $[0, \infty)$, большее значение считается лучшим.
 2) Perceptual Evaluation of Speech Quality (PESQ) - оценка качества голосовой связи, меняется в пределах $[-0.5, 4.5]$, большее значение считается лучшим.
 3) Short-Time Objective Intelligibility (STOI) - показатель разборчивости речи, 
 меняется в пределах $[0, 1]$, большее значение считается лучшим.
